@@ -1,0 +1,209 @@
+#define PI 3.14159265358979323846
+
+#define KERNEL_FUNCTION3D(function) \
+[numthreads(8, 8, 1)] \
+void function##Kernel(uint3 id : SV_DispatchThreadID) \
+{ \
+    float2 uv = GetUV(id); \
+    SetPosition(id, GetPosition(id) + GetNormal(id) * function(uv.x * _FunctionSize, uv.y * _FunctionSize , _Time)); \
+}
+
+#define KERNEL_FUNCTION2D(function) \
+[numthreads(8, 8, 1)] \
+void function##Kernel(uint3 id : SV_DispatchThreadID) \
+{ \
+    float2 uv = GetUV(id); \
+    SetPosition(id, GetPosition(id) + GetNormal(id) * function(uv.x * _FunctionSize, _Time)); \
+}
+
+#define KERNEL_FIGURE3D(figure) \
+[numthreads(8,8,1)] \
+void figure##Kernel(uint3 id : SV_DispatchThreadID) \
+{ \
+    float2 uv = GetUV(id); \
+    figure(id, uv.x, uv.y); \
+}
+
+#define KERNEL_FIGURE2D(figure) \
+[numthreads(8,8,1)] \
+void figure##Kernel(uint3 id : SV_DispatchThreadID) \
+{ \
+    float2 uv = GetUV(id); \
+    figure(id, uv.x); \
+}
+
+// Create a RenderTexture with enableRandomWrite flag and set it
+// with cs.SetTexture
+RWStructuredBuffer<float3> _Positions;
+RWStructuredBuffer<float3> _Normals;
+uint _Resolution;
+
+float _Step;
+float _Time;
+float _Dump;
+
+float _FigureSize;
+float _FigureSize2;
+int _FunctionSize;
+
+float _Speed;
+float _Amp0;
+float _Amp1;
+float _Amp2;
+
+float Wave3D(float u, float v, float time)
+{
+    return sin(u + v + time * _Speed);
+}
+
+float Wave2D(float u, float time)
+{
+    return sin(u + _Speed * time);
+}
+
+float MultiWave3D(float u, float v, float time)
+{
+    float y = 0;
+
+    y += sin(u + _Speed * time);
+    y += _Amp1 * sin(v * 4 + _Speed * time);
+    y += _Amp2 * sin((u + v) * 2 + _Speed * time);
+    return y;
+}
+
+float MultiWave2D(float u, float time)
+{
+    float y = 0;
+
+    y += sin(u + _Speed * time);
+    y += _Amp1 * sin(u * 4 + _Speed * time);
+    y += _Amp2 * sin(u * 2 + _Speed * time);
+    return y;
+}
+
+float Ripple3D(float u, float v, float time)
+{
+    float d = sqrt(u*u + v*v);
+    float y = sin(2 * _Speed * (4 * d - time));
+    y /= (1 + _Dump * d);
+
+    return y;
+}
+
+float Ripple2D(float u, float time)
+{
+    float d = abs(u);
+    float y = sin(2 * _Speed * (4 * d - time));
+    y /= (1 + _Dump * d);
+
+    return y;
+}
+
+float2 GetUV(uint3 id)
+{
+    return id.xy * _Step - PI;
+}
+
+void SetPosition(uint3 id, float3 position)
+{
+    if (id.x < _Resolution && id.y < _Resolution) 
+        _Positions[id.x + id.y * _Resolution] = float3(position.x,  position.y, position.z);
+}
+
+void SetNormal(uint3 id, float3 normal)
+{
+    if (id.x < _Resolution && id.y < _Resolution) 
+        _Normals[id.x + id.y * _Resolution] = float3(normal.x, normal.y, normal.z);
+}
+
+float3 GetPosition(uint3 id)
+{
+    if (id.x < _Resolution && id.y < _Resolution) 
+        return _Positions[id.x + id.y * _Resolution];
+    
+    return float3(0,0,0);
+}
+
+float3 GetNormal(uint3 id)
+{
+    if (id.x < _Resolution && id.y < _Resolution) 
+        return _Normals[id.x + id.y * _Resolution];
+    
+    return float3(0,0,0);
+}
+
+void Plane2D(uint3 id, float u)
+{
+    SetPosition(id, float3(u * _FigureSize, 0, 0));
+    SetNormal(id, float3(0, _Amp0, 0));
+}
+
+void Circle2D(uint3 id, float u)
+{
+    float3 r = float3(cos(u), sin(u), 0);
+    SetPosition(id, r.xyz * _FigureSize);
+    SetNormal(id, r.xyz * _Amp0);
+}
+
+void Plane3D(uint3 id, float u, float v)
+{
+    SetPosition(id, float3(u * _FigureSize, 0, v * _FigureSize));
+    SetNormal(id, float3(0, _Amp0, 0));
+}
+
+void Sphere3D(uint3 id, float u, float v)
+{
+    float r = sin(v);
+    float x = r * cos(u);
+    float y = cos(v);
+    float z = r * sin(u);
+
+    float3 R = float3(x, y, z);
+    
+    SetPosition(id, R * _FigureSize);
+    SetNormal(id, R.xyz * _Amp0);
+}
+
+void Torus3D(uint3 id, float u, float v)
+{
+    float r1 = _FigureSize2;
+    float r2 = _FigureSize;
+
+    float r = r1 + r2 * sin(v);
+    float x = r * cos(u);
+    float y = cos(v);
+    float z = r * sin(u);
+
+    SetPosition(id, float3(x, y, z));
+    SetNormal(id , normalize(float3(x, y, z) - float3(x/r, y/r, 0) * (r1 + r2 / 2)) * _Amp0);
+}
+
+#pragma kernel Wave3DKernel
+#pragma kernel MultiWave3DKernel
+#pragma kernel Ripple3DKernel
+
+#pragma kernel Wave2DKernel
+#pragma kernel MultiWave2DKernel
+#pragma kernel Ripple2DKernel
+
+#pragma kernel Plane2DKernel
+#pragma kernel Circle2DKernel
+
+#pragma kernel Plane3DKernel
+#pragma kernel Sphere3DKernel
+#pragma kernel Torus3DKernel
+
+KERNEL_FUNCTION3D(Wave3D)
+KERNEL_FUNCTION3D(MultiWave3D)
+KERNEL_FUNCTION3D(Ripple3D)
+
+KERNEL_FUNCTION2D(Wave2D)
+KERNEL_FUNCTION2D(MultiWave2D)
+KERNEL_FUNCTION2D(Ripple2D)
+
+KERNEL_FIGURE2D(Plane2D)
+KERNEL_FIGURE2D(Circle2D)
+
+KERNEL_FIGURE3D(Plane3D)
+KERNEL_FIGURE3D(Sphere3D)
+KERNEL_FIGURE3D(Torus3D)
