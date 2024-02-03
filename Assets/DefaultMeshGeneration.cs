@@ -12,9 +12,14 @@ public class DefaultMeshGeneration : MonoBehaviour
             name = "ProceduralMesh",
             vertices = new Vector3[] { Vector3.zero, Vector3.right, Vector3.up, Vector3.right + Vector3.up },
             triangles = new int[] { 0, 2, 1, 2, 3, 1 },
+            tangents = new Vector4[] {
+                new Vector4(1f, 0f, 0f, -1f),
+                new Vector4(1f, 0f, 0f, -1f),
+                new Vector4(1f, 0f, 0f, -1f),
+                new Vector4(1f, 0f, 0f, -1f)
+            },
             normals = new Vector3[] { Vector3.back, Vector3.back, Vector3.back, Vector3.back },
-            uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.up + Vector2.right }
-            
+            uv = new Vector2[] { Vector2.zero, Vector2.right, Vector2.up, Vector2.up + Vector2.right }            
         };
 
         GetComponent<MeshFilter>().mesh = mesh;
