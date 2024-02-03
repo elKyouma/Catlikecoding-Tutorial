@@ -102,10 +102,20 @@ public static partial class Noise
                                 hA = select(hashx0, hashx1, xA),
                                 hB = select(hashx0, hashx1, xB);
 
-            return default(G).EvaluateAfterInterpolation(Kernel(hashx0.Eat(y0).Eat(z0), x0, y0, z0, positions) +
-                    Kernel(hashx1.Eat(y1).Eat(z1), x1, y1, z1, positions) +
-                    Kernel(hA.Eat(yCA).Eat(zCA), xCA, yCA, zCA, positions) +
-                    Kernel(hB.Eat(yCB).Eat(zCB), xCB, yCB, zCB, positions)) / 4f;
+            //return default(G).EvaluateAfterInterpolation(
+            //        Kernel(hashx0.Eat(y0).Eat(z0), x0, y0, z0, positions) +
+            //        Kernel(hashx1.Eat(y1).Eat(z1), x1, y1, z1, positions) +
+            //        Kernel(hA.Eat(yCA).Eat(zCA), xCA, yCA, zCA, positions) +
+            //        Kernel(hB.Eat(yCB).Eat(zCB), xCB, yCB, zCB, positions)) / 4f;
+            return default(G).EvaluateAfterInterpolation(
+                    Kernel(hashx0.Eat(y0).Eat(z0), x0, y0, z0, positions) +
+                    Kernel(hashx0.Eat(y0).Eat(z1), x0, y0, z1, positions) +
+                    Kernel(hashx0.Eat(y1).Eat(z0), x0, y1, z0, positions) +
+                    Kernel(hashx0.Eat(y1).Eat(z1), x0, y1, z1, positions) +
+                    Kernel(hashx1.Eat(y0).Eat(z0), x1, y0, z0, positions) +
+                    Kernel(hashx1.Eat(y0).Eat(z1), x1, y0, z1, positions) +
+                    Kernel(hashx1.Eat(y1).Eat(z0), x1, y1, z0, positions) +
+                    Kernel(hashx1.Eat(y1).Eat(z1), x1, y1, z1, positions)) / 4f;
         }
     }
 }

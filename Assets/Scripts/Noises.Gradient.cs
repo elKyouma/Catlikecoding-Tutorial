@@ -39,7 +39,7 @@ public static partial class Noises
 
         public float4 Evaluate(SmallXXHash4 hash, float4 x) => default(GRADIENT).Evaluate(hash, x) * Interpolation(x, 0, 0, 0);
         public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y) => default(GRADIENT).Evaluate(hash, x, y) * Interpolation(x, y, 0, 0);
-        public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z) => default(GRADIENT).Evaluate(hash, x, y, z) * Interpolation(x, y, z, 0);
+        public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z) => default(GRADIENT).Evaluate(hash, x, y, 0) * Interpolation(x, y, z, 0);
         public float4 Evaluate(SmallXXHash4 hash, float4 x, float4 y, float4 z, float4 w) => default(GRADIENT).Evaluate(hash, x, y, z, w) * Interpolation(x, y, z, w);
 
         public float4 EvaluateAfterInterpolation(float4 value) => default(GRADIENT).EvaluateAfterInterpolation(value);
