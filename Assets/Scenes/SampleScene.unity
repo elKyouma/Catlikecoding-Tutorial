@@ -795,11 +795,11 @@ MonoBehaviour:
       z: 1
   settings:
     seed: 0
-    frequency: 1
+    frequency: 16
     octaves: 1
     lacunarity: 2
     persistance: 0
-  dimensions: 2
+  dimensions: 3
   timeScale: 0
   tiled: 0
   noiseType: 4

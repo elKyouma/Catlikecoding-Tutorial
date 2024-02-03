@@ -1,5 +1,4 @@
 using UnityEngine;
-using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Jobs;
 
@@ -86,20 +85,20 @@ public class NoiseMaker : Visualisation
             Job<Lattice3DT<Turbulance<Perlin>, LatticeTiled>>.ScheduleParallel
         },
         {
-            Job<Simplex1D<Kernel>>.ScheduleParallel,
-            Job<Simplex1D<Kernel>>.ScheduleParallel,
-            Job<Simplex2D<Kernel>>.ScheduleParallel,
-            Job<Simplex2D<Kernel>>.ScheduleParallel,
-            Job<Simplex3D<Kernel>>.ScheduleParallel,
-            Job<Simplex3D<Kernel>>.ScheduleParallel
+            Job<Simplex1D<Kernel<Simplex>>>.ScheduleParallel,
+            Job<Simplex1D<Kernel<Simplex>>>.ScheduleParallel,
+            Job<Simplex2D<Kernel<Simplex>>>.ScheduleParallel,
+            Job<Simplex2D<Kernel<Simplex>>>.ScheduleParallel,
+            Job<Simplex3D<Kernel<Simplex>>>.ScheduleParallel,
+            Job<Simplex3D<Kernel<Simplex>>>.ScheduleParallel
         },
         {
-            Job<Simplex1D<Turbulance<Kernel>>>.ScheduleParallel,
-            Job<Simplex1D<Turbulance<Kernel>>>.ScheduleParallel,
-            Job<Simplex2D<Turbulance<Kernel>>>.ScheduleParallel,
-            Job<Simplex2D<Turbulance<Kernel>>>.ScheduleParallel,
-            Job<Simplex3D<Turbulance<Kernel>>>.ScheduleParallel,
-            Job<Simplex3D<Turbulance<Kernel>>>.ScheduleParallel
+            Job<Simplex1D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel,
+            Job<Simplex1D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel,
+            Job<Simplex2D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel,
+            Job<Simplex3D<Turbulance<Kernel<Simplex>>>>.ScheduleParallel
         },
         {
             Job<Voronoi1D<LatticeNormal,    F1,         Worley>>.ScheduleParallel,
