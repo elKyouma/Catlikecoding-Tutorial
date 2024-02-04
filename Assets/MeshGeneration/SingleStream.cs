@@ -39,7 +39,7 @@ namespace ProceduralMeshes.Streams
             meshData.SetIndexBufferParams(indexCount, IndexFormat.UInt16);
 
             stream0 = meshData.GetVertexData<Stream0>();
-            triangles = meshData.GetIndexData<int>().Reinterpret<TriangleUInt16>(4);
+            triangles = meshData.GetIndexData<ushort>().Reinterpret<TriangleUInt16>(2);
 
             meshData.subMeshCount = 1;
             meshData.SetSubMesh(0, new SubMeshDescriptor(0, indexCount, MeshTopology.Triangles)
