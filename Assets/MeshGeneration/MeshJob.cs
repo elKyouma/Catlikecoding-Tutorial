@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace ProceduralMeshes
 {
+    public delegate JobHandle MeshJobScheduleDelegate(Mesh mesh, Mesh.MeshData meshData, int resolution, JobHandle dependency);
+
     [BurstCompile(FloatPrecision.Standard, FloatMode.Fast, CompileSynchronously = true)]
     public struct MeshJob<Generator, Streams> : IJobFor
         where Generator : struct, IMeshGenetator

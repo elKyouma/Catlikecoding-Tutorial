@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Rendering;
+using static UnityEngine.Mesh;
 
 namespace ProceduralMeshes
 {
@@ -20,7 +21,19 @@ namespace ProceduralMeshes
         [SerializeField, Range(1, 10)]
         int resolution;
 
+        enum MeshJobType
+        {
+            SquareGrid
+        }
 
+        [SerializeField]
+        MeshJobType meshJobType;
+
+        MeshJobScheduleDelegate[] meshJobs =
+        {
+             MeshJob<SquareGrid, Streams.SingleStream>.ScheduleParallel,
+             MeshJob<SquareGrid, Streams.MultiStream>.ScheduleParallel
+        };
         bool dirty;
         private void Awake()
         {
@@ -49,10 +62,7 @@ namespace ProceduralMeshes
             Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
             Mesh.MeshData meshData = meshDataArray[0];
 
-            if (streamType == StreamType.SingleStream)
-                MeshJob<SquareGrid, Streams.SingleStream>.ScheduleParallel(mesh, meshData, resolution, default).Complete();
-            else
-                MeshJob<SquareGrid, Streams.MultiStream>.ScheduleParallel(mesh, meshData, resolution, default).Complete();
+            meshJobs[(int)meshJobType + (int)streamType](mesh, meshData, resolution, default).Complete();
 
             Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh, MeshUpdateFlags.DontRecalculateBounds);
             GetComponent<MeshFilter>().mesh = mesh;

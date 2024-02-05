@@ -21,13 +21,13 @@ namespace ProceduralMeshes.Generators
         {
             Vertex tempVertex = new() { normal = up(), tangent = float4(1f, 0f, 0f, -1f) };
 
-            int vi = 4 * index, ti = 2 * index;
             float z = index;
-            for (int i = 0; i < Resolution; i++)
+            int vi = 4 * Resolution * index, ti = 2 * Resolution * index;
+            for (int i = 0; i < Resolution; i++, vi+=4, ti +=2)
             {
-                float x = index;
+                float x = i;
 
-                float3 relativePosition = float3(x / Resolution, 0f, z / Resolution);
+                float3 relativePosition = float3(x / Resolution - 0.5f, 0f, z / Resolution - 0.5f);
                 tempVertex.position = relativePosition;
                 tempVertex.uv = 0f;
                 streams.SetVertex(vi, tempVertex);
