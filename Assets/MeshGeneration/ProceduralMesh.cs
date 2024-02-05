@@ -18,12 +18,13 @@ namespace ProceduralMeshes
 
         [SerializeField]
         StreamType streamType;
-        [SerializeField, Range(1, 10)]
+        [SerializeField, Range(1, 30)]
         int resolution;
 
         enum MeshJobType
         {
-            SquareGrid
+            SquareGrid,
+            SharedSquareGrid
         }
 
         [SerializeField]
@@ -32,7 +33,9 @@ namespace ProceduralMeshes
         MeshJobScheduleDelegate[] meshJobs =
         {
              MeshJob<SquareGrid, Streams.SingleStream>.ScheduleParallel,
-             MeshJob<SquareGrid, Streams.MultiStream>.ScheduleParallel
+             MeshJob<SquareGrid, Streams.MultiStream>.ScheduleParallel,
+             MeshJob<SharedSquareGrid, Streams.SingleStream>.ScheduleParallel,
+             MeshJob<SharedSquareGrid, Streams.MultiStream>.ScheduleParallel
         };
         bool dirty;
         private void Awake()
@@ -62,7 +65,7 @@ namespace ProceduralMeshes
             Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
             Mesh.MeshData meshData = meshDataArray[0];
 
-            meshJobs[(int)meshJobType + (int)streamType](mesh, meshData, resolution, default).Complete();
+            meshJobs[(int)meshJobType*2 + (int)streamType](mesh, meshData, resolution, default).Complete();
 
             Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh, MeshUpdateFlags.DontRecalculateBounds);
             GetComponent<MeshFilter>().mesh = mesh;
