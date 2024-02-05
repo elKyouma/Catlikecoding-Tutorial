@@ -9,34 +9,41 @@ namespace ProceduralMeshes.Generators
 {
     public struct SquareGrid : IMeshGenetator
     {
-        public int JobLength => 1;
-        public int VertexCount => 4;
-        public int IndexTriangleCount => 6;
+        public int Resolution { get; set; }
+        public int JobLength => Resolution * Resolution;
+        public int VertexCount => 4 * Resolution * Resolution;
+        public int IndexTriangleCount => 6 * Resolution * Resolution;
 
-        public Bounds Bounds => new (new Vector3(0.5f, 0.5f), new Vector3(1f, 1f));
+        public Bounds Bounds => new(new Vector3(0.5f, 0f, 0.5f), new Vector3(1f, 1f, 1f));
 
-        public void Execute<Streams>(int index, Streams streams) where Streams : struct, IMeshStreams 
+
+        public void Execute<Streams>(int index, Streams streams) where Streams : struct, IMeshStreams
         {
-            Vertex tempVertex = new() { normal = back(), tangent = float4(1f, 0f, 0f, -1f) };
-            
-            tempVertex.position = 0f;
+            Vertex tempVertex = new() { normal = up(), tangent = float4(1f, 0f, 0f, -1f) };
+
+            int vi = 4 * index, ti = 2 * index;
+            float z = index / Resolution;
+            float x = index - z * Resolution;
+
+            float3 relativePosition = float3(x/Resolution, 0f, z/Resolution);
+            tempVertex.position = relativePosition;
             tempVertex.uv = 0f;
-            streams.SetVertex(0, tempVertex);
+            streams.SetVertex(vi, tempVertex);
 
-            tempVertex.position = right();
+            tempVertex.position = relativePosition + right() / Resolution;
             tempVertex.uv = float2(1f, 0f);
-            streams.SetVertex(1, tempVertex);
+            streams.SetVertex(vi + 1, tempVertex);
 
-            tempVertex.position = up();
+            tempVertex.position = relativePosition + forward() / Resolution;
             tempVertex.uv = float2(0f, 1f);
-            streams.SetVertex(2, tempVertex);
-            
-            tempVertex.position = right() + up();
-            tempVertex.uv = 1f;
-            streams.SetVertex(3, tempVertex);
+            streams.SetVertex(vi + 2, tempVertex);
 
-            streams.SetTriangle(0, int3(0, 2, 1));
-            streams.SetTriangle(1, int3(2, 3, 1));
+            tempVertex.position = relativePosition +  right() / Resolution + forward() / Resolution;
+            tempVertex.uv = 1f;
+            streams.SetVertex(vi + 3, tempVertex);
+
+            streams.SetTriangle(ti, int3(vi, vi + 2, vi + 1));
+            streams.SetTriangle(ti + 1, int3(vi + 2, vi + 3, vi + 1));
         }
     }
 }

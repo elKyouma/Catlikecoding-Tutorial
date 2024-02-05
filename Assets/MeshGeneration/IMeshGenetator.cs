@@ -9,6 +9,8 @@ namespace ProceduralMeshes
         public int JobLength => 0;
         public int VertexCount => 0;
         public int IndexTriangleCount => 0;
+        public int Resolution { get; set; }
+
         Bounds Bounds { get; }
         public void Execute<Streams>(int index, Streams streams) where Streams : struct, IMeshStreams{ }
     }
