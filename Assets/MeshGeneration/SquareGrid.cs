@@ -10,7 +10,7 @@ namespace ProceduralMeshes.Generators
     public struct SquareGrid : IMeshGenetator
     {
         public int Resolution { get; set; }
-        public int JobLength => Resolution * Resolution;
+        public int JobLength => Resolution;
         public int VertexCount => 4 * Resolution * Resolution;
         public int IndexTriangleCount => 6 * Resolution * Resolution;
 
@@ -22,28 +22,31 @@ namespace ProceduralMeshes.Generators
             Vertex tempVertex = new() { normal = up(), tangent = float4(1f, 0f, 0f, -1f) };
 
             int vi = 4 * index, ti = 2 * index;
-            float z = index / Resolution;
-            float x = index - z * Resolution;
+            float z = index;
+            for (int i = 0; i < Resolution; i++)
+            {
+                float x = index;
 
-            float3 relativePosition = float3(x/Resolution, 0f, z/Resolution);
-            tempVertex.position = relativePosition;
-            tempVertex.uv = 0f;
-            streams.SetVertex(vi, tempVertex);
+                float3 relativePosition = float3(x / Resolution, 0f, z / Resolution);
+                tempVertex.position = relativePosition;
+                tempVertex.uv = 0f;
+                streams.SetVertex(vi, tempVertex);
 
-            tempVertex.position = relativePosition + right() / Resolution;
-            tempVertex.uv = float2(1f, 0f);
-            streams.SetVertex(vi + 1, tempVertex);
+                tempVertex.position = relativePosition + right() / Resolution;
+                tempVertex.uv = float2(1f, 0f);
+                streams.SetVertex(vi + 1, tempVertex);
 
-            tempVertex.position = relativePosition + forward() / Resolution;
-            tempVertex.uv = float2(0f, 1f);
-            streams.SetVertex(vi + 2, tempVertex);
+                tempVertex.position = relativePosition + forward() / Resolution;
+                tempVertex.uv = float2(0f, 1f);
+                streams.SetVertex(vi + 2, tempVertex);
 
-            tempVertex.position = relativePosition +  right() / Resolution + forward() / Resolution;
-            tempVertex.uv = 1f;
-            streams.SetVertex(vi + 3, tempVertex);
+                tempVertex.position = relativePosition + right() / Resolution + forward() / Resolution;
+                tempVertex.uv = 1f;
+                streams.SetVertex(vi + 3, tempVertex);
 
-            streams.SetTriangle(ti, int3(vi, vi + 2, vi + 1));
-            streams.SetTriangle(ti + 1, int3(vi + 2, vi + 3, vi + 1));
+                streams.SetTriangle(ti, int3(vi, vi + 2, vi + 1));
+                streams.SetTriangle(ti + 1, int3(vi + 2, vi + 3, vi + 1));
+            }
         }
     }
 }
