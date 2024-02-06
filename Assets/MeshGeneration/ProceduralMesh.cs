@@ -24,7 +24,8 @@ namespace ProceduralMeshes
         enum MeshJobType
         {
             SquareGrid,
-            SharedSquareGrid
+            SharedSquareGrid,
+            SharedTriangleGrid
         }
 
         [SerializeField]
@@ -35,7 +36,9 @@ namespace ProceduralMeshes
              MeshJob<SquareGrid, Streams.SingleStream>.ScheduleParallel,
              MeshJob<SquareGrid, Streams.MultiStream>.ScheduleParallel,
              MeshJob<SharedSquareGrid, Streams.SingleStream>.ScheduleParallel,
-             MeshJob<SharedSquareGrid, Streams.MultiStream>.ScheduleParallel
+             MeshJob<SharedSquareGrid, Streams.MultiStream>.ScheduleParallel,
+             MeshJob<SharedTriangleGrid, Streams.SingleStream>.ScheduleParallel,
+             MeshJob<SharedTriangleGrid, Streams.MultiStream>.ScheduleParallel
         };
         bool dirty;
         private void Awake()
