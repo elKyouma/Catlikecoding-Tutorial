@@ -1,3 +1,4 @@
+using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -21,20 +22,34 @@ namespace ProceduralMeshes.Generators
         {
             Vertex tempVertex = new() { normal = up(), tangent = float4(1f, 0f, 0f, -1f) };
 
-            float z = index;
+            float zOffset = 0.5f - sqrt(3)/4f;
+            float z = index * sqrt(3)/2;
             int ti = 2 * Resolution * (index - 1) - 2;
+            
+            float offsetPos = (index & 1) == 1 ? 0.25f : -0.25f;
+            offsetPos /= Resolution;
+            float offsetUV = offsetPos;
+            offsetPos += 0.5f;
+
             for (int i = 0; i < Resolution + 1; i++, ti += 2)
             {
                 float x = i;
 
-                tempVertex.position = float3(x / Resolution - 0.5f, 0f, z / Resolution - 0.5f);
-                tempVertex.uv = float2(x / Resolution, z / Resolution);
-                streams.SetVertex(GetIndex(x, z), tempVertex);
+                tempVertex.position = float3(x / Resolution - offsetPos, 0f, z / Resolution - 0.5f + zOffset);
+                tempVertex.uv = float2(x / Resolution - offsetUV, z / Resolution + zOffset);
+                streams.SetVertex(GetIndex(x, index), tempVertex);
 
-                if (z > 0 && x > 0)
+                if (z == 0 || x == 0) continue;
+
+                if ((index & 1) == 0)
                 {
-                    streams.SetTriangle(ti, int3(GetIndex(x - 1, z - 1), GetIndex(x - 1, z), GetIndex(x, z - 1)));
-                    streams.SetTriangle(ti + 1, int3(GetIndex(x - 1, z), GetIndex(x, z), GetIndex(x, z - 1)));
+                    streams.SetTriangle(ti, int3(GetIndex(x - 1, index - 1), GetIndex(x - 1, index), GetIndex(x, index - 1)));
+                    streams.SetTriangle(ti + 1, int3(GetIndex(x - 1, index), GetIndex(x, index), GetIndex(x, index - 1)));
+                }
+                else
+                {
+                    streams.SetTriangle(ti, int3(GetIndex(x - 1, index - 1), GetIndex(x - 1, index), GetIndex(x, index)));
+                    streams.SetTriangle(ti + 1, int3(GetIndex(x - 1, index - 1), GetIndex(x, index), GetIndex(x, index - 1)));
                 }
             }
         }
