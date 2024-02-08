@@ -23,10 +23,11 @@ namespace ProceduralMeshes.Generators
             0.5f, 0.25f, -0.25f,
             -0.5f, -0.25f, 0.25f
         };
+
         private static readonly float[] pointsX = {
             0f,
-            0f, 0.25f * sqrt(3), 0.25f * sqrt(3),
-            0f, -0.25f * sqrt(3), -0.25f * sqrt(3)
+            0f, 0.25f * 1.73205081f, 0.25f * 1.73205081f,
+            0f, -0.25f * 1.73205081f, -0.25f * 1.73205081f
         };
 
         public Bounds Bounds => new(new Vector3(0.5f, 0f, 0.5f), new Vector3(1f, 1f, 1f));
@@ -51,7 +52,7 @@ namespace ProceduralMeshes.Generators
 
                 for (int i = 0; i < VertsPerHex; i++, vi++)
                 {
-                    tempVertex.position = new Vector3((float)xIndex / Resolution * sqrt(3) / 2f, 0f, (float)zIndex / Resolution);
+                    tempVertex.position = float3((float)xIndex / Resolution * sqrt(3) * 0.5f - (Resolution - 1f) * sqrt(3) * 0.25f / Resolution, 0f, (float)zIndex / Resolution - (Resolution - 1f)*0.5f/Resolution);
                     tempVertex.position += float3(pointsX[i] / Resolution, 0f, pointsZ[i] / Resolution);
                     tempVertex.uv = float2((pointsX[i] - 0.25f * sqrt(3)) / Resolution, (pointsZ[i] - 0.5f) / Resolution);
                     streams.SetVertex(vi, tempVertex);
