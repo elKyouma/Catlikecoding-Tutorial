@@ -18,12 +18,12 @@ namespace ProceduralMeshes.Generators
         public int VertexCount => VertsPerHex * Resolution * Resolution;
         public int IndexTriangleCount => 3 * 6 * Resolution * Resolution;
 
-        private static readonly float[] pointsZ = new float[]{
+        private static readonly float[] pointsZ = {
             0f,
             0.5f, 0.25f, -0.25f,
             -0.5f, -0.25f, 0.25f
         };
-        private static readonly float[] pointsX = new float[]{
+        private static readonly float[] pointsX = {
             0f,
             0f, 0.25f * sqrt(3), 0.25f * sqrt(3),
             0f, -0.25f * sqrt(3), -0.25f * sqrt(3)
