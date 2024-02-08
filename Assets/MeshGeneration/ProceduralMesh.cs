@@ -26,7 +26,8 @@ namespace ProceduralMeshes
             SquareGrid,
             SharedSquareGrid,
             SharedTriangleGrid,
-            PointyHexagonGrid
+            PointyHexagonGrid,
+            FlatHexagonGrid
         }
 
         [SerializeField]
@@ -41,7 +42,9 @@ namespace ProceduralMeshes
             MeshJob<SharedTriangleGrid, Streams.SingleStream>.ScheduleParallel,
             MeshJob<SharedTriangleGrid, Streams.MultiStream>.ScheduleParallel,
             MeshJob<PointyHexagonGrid, Streams.SingleStream>.ScheduleParallel,
-            MeshJob<PointyHexagonGrid, Streams.MultiStream>.ScheduleParallel
+            MeshJob<PointyHexagonGrid, Streams.MultiStream>.ScheduleParallel,
+            MeshJob<FlatHexagonGrid, Streams.SingleStream>.ScheduleParallel,
+            MeshJob<FlatHexagonGrid, Streams.MultiStream>.ScheduleParallel
         };
         bool dirty;
         private void Awake()
