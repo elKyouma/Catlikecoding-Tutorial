@@ -52,9 +52,17 @@ namespace ProceduralMeshes.Generators
 
                 for (int i = 0; i < VertsPerHex; i++, vi++)
                 {
-                    tempVertex.position = float3((float)xIndex / Resolution * sqrt(3) * 0.5f - (Resolution - 1f) * sqrt(3) * 0.25f / Resolution, 0f, (float)zIndex / Resolution - (Resolution - 1f)*0.5f/Resolution);
-                    tempVertex.position += float3(pointsX[i] / Resolution, 0f, pointsZ[i] / Resolution);
-                    tempVertex.uv = float2((pointsX[i] - 0.25f * sqrt(3)) / Resolution, (pointsZ[i] - 0.5f) / Resolution);
+                    float hexRadius = (Resolution - 1f) / Resolution;
+                    float3 gridOffset = float3(hexRadius * sqrt(3) * 0.25f, 0f, hexRadius / 3f);
+                    float evenZOffset = (zIndex & 1) == 1 ? 0.5f / Resolution : 0f;
+                    float3 centerPosition = float3((float)xIndex / Resolution * sqrt(3) * 0.5f, 0f, zIndex * 2f / 3f / Resolution);
+                    float3 hexPointsOffset = float3(pointsX[i] / Resolution, 0f, pointsZ[i] / Resolution);
+
+                    tempVertex.position = centerPosition;
+                    tempVertex.position += hexPointsOffset;
+                    tempVertex.position -= gridOffset;
+                    tempVertex.position.x += evenZOffset;
+                    tempVertex.uv = float2(tempVertex.position.x - 0.5f, tempVertex.position.z - 0.5f);
                     streams.SetVertex(vi, tempVertex);
                 }
 
