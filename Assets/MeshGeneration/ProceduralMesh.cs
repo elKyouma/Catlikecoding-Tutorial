@@ -2,6 +2,7 @@ using ProceduralMeshes.Generators;
 using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using static UnityEngine.Mesh;
@@ -20,7 +21,8 @@ namespace ProceduralMeshes
         StreamType streamType;
         [SerializeField, Range(1, 30)]
         int resolution;
-
+        [SerializeField]
+        bool drawGizmos = true;
         enum MeshJobType
         {
             SquareGrid,
@@ -29,6 +31,8 @@ namespace ProceduralMeshes
             PointyHexagonGrid,
             FlatHexagonGrid
         }
+
+        Vector3[] vertices;
 
         [SerializeField]
         MeshJobType meshJobType;
@@ -78,6 +82,18 @@ namespace ProceduralMeshes
 
             Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh, MeshUpdateFlags.DontRecalculateBounds);
             GetComponent<MeshFilter>().mesh = mesh;
+            
+            vertices = mesh.vertices;
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!drawGizmos || vertices == null) return;
+
+            foreach(Vector3 v in vertices)
+            {
+                Gizmos.DrawSphere(v * transform.lossyScale.x, 0.1f / resolution);
+            }
         }
     }
 }
