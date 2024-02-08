@@ -14,7 +14,7 @@ namespace ProceduralMeshes.Generators
         public int VertexCount => 4 * Resolution * Resolution;
         public int IndexTriangleCount => 6 * Resolution * Resolution;
 
-        public Bounds Bounds => new(new Vector3(0.5f, 0f, 0.5f), new Vector3(1f, 1f, 1f));
+        public Bounds Bounds => new(new Vector3(0.0f, 0f, 0.0f), new Vector3(1f, 1f, 1f));
 
 
         public void Execute<Streams>(int index, Streams streams) where Streams : struct, IMeshStreams
