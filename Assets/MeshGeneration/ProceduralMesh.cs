@@ -33,6 +33,8 @@ namespace ProceduralMeshes
         }
 
         Vector3[] vertices;
+        Vector3[] normals;
+        Vector4[] tangents;
 
         [SerializeField]
         MeshJobType meshJobType;
@@ -85,15 +87,27 @@ namespace ProceduralMeshes
             GetComponent<MeshFilter>().mesh = mesh;
             
             vertices = mesh.vertices;
+            normals = mesh.normals;
+            tangents = mesh.tangents;
         }
 
         private void OnDrawGizmos()
         {
             if (!drawGizmos || vertices == null) return;
 
-            foreach(Vector3 v in vertices)
+            Transform t = transform;
+            for (int i = 0; i < vertices.Length; i++)
             {
-                Gizmos.DrawSphere(v * transform.lossyScale.x, 0.1f / resolution);
+                Vector3 v = t.TransformPoint(vertices[i]);
+                Vector3 n = t.TransformDirection(normals[i]);
+                Vector4 tan = t.TransformDirection(tangents[i]);
+
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawSphere(v, 0.1f / resolution);
+                Gizmos.color = Color.green;
+                Gizmos.DrawRay(v, 0.5f * n / resolution);
+                Gizmos.color = Color.red;
+                Gizmos.DrawRay(v, 0.5f * tan / resolution);
             }
         }
     }

@@ -37,7 +37,7 @@ namespace ProceduralMeshes.Generators
         public void Execute<Streams>(int zIndex, Streams streams) where Streams : struct, IMeshStreams
         {
             Vertex tempVertex;
-            tempVertex.normal = back();
+            tempVertex.normal = up();
             tempVertex.tangent = float4(1f, 0f, 0f, -1f);
 
             int vi = zIndex * 7 * Resolution;
