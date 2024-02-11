@@ -20,19 +20,19 @@ namespace ProceduralMeshes.Generators
 
         private static readonly float[] pointsZ = {
             0f,
-            0.5f, 0.25f, -0.25f,
-            -0.5f, -0.25f, 0.25f
+            1f, 0.5f, -0.5f,
+            -1f, -0.5f, 0.5f
         };
 
         private static readonly float[] pointsX = {
             0f,
-            0f, 0.25f * 1.73205081f, 0.25f * 1.73205081f,
-            0f, -0.25f * 1.73205081f, -0.25f * 1.73205081f
+            0f, 0.5f * 1.73205081f, 0.5f * 1.73205081f,
+            0f, -0.5f * 1.73205081f, -0.5f * 1.73205081f
         };
 
-        float HexDoubleRadius => (Resolution - 1f) / Resolution * 0.5f;
+        float HexRadius => Resolution != 1 ? 1f / ((Resolution + 0.5f) * sqrt(3)) : 0.5f / Resolution;
 
-        public Bounds Bounds => new(Vector3.zero, new Vector3(1f + sqrt(3) / 2f / Resolution - HexDoubleRadius * sqrt(3) * 0.25f, 0f, 1f - HexDoubleRadius * 2f / 3f));
+        public Bounds Bounds => new(Vector3.zero, new Vector3(1f + sqrt(3) / 2f / Resolution - HexRadius * sqrt(3) * 0.25f, 0f, HexRadius * 2f / 3f));
 
         public void Execute<Streams>(int zIndex, Streams streams) where Streams : struct, IMeshStreams
         {
@@ -52,12 +52,12 @@ namespace ProceduralMeshes.Generators
                 streams.SetTriangle(ti + 4, vi + int3(0, 5, 6));
                 streams.SetTriangle(ti + 5, vi + int3(0, 6, 1));
 
+                float3 gridOffset = Resolution != 1 ? float3(0.5f - HexRadius * sqrt(3) * 0.25f, 0f, 1f - (Resolution + 0.5f) * HexRadius) : float3(0.225f, 0f, 0.0f);
                 for (int i = 0; i < VertsPerHex; i++, vi++)
                 {
-                    float3 gridOffset = float3(HexDoubleRadius * sqrt(3) * 0.5f, 0f, HexDoubleRadius * 2f / 3f);
-                    float evenZOffset = (zIndex & 1) == 1 ? -0.25f / Resolution : 0.25f / Resolution;
-                    float3 centerPosition = float3((float)xIndex / Resolution * sqrt(3) * 0.5f, 0f, zIndex * 2f / 3f / Resolution);
-                    float3 hexPointsOffset = float3(pointsX[i] / Resolution, 0f, pointsZ[i] / Resolution);
+                    float evenZOffset = (zIndex & 1) == 1 ? HexRadius * 0.75f * sqrt(3) : HexRadius * 0.25f * sqrt(3);
+                    float3 centerPosition = float3(xIndex * HexRadius * sqrt(3), 0f, zIndex * HexRadius * 1.5f);
+                    float3 hexPointsOffset = float3(pointsX[i] * HexRadius, 0f, pointsZ[i] * HexRadius);
 
                     tempVertex.position = centerPosition;
                     tempVertex.position += hexPointsOffset;

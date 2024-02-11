@@ -31,8 +31,8 @@ namespace ProceduralMeshes.Generators
         };
 
         float HexDoubleRadius => (Resolution - 1f) / Resolution * 0.5f;
+        public Bounds Bounds => new(Vector3.zero, new Vector3(0.65f, 0f, 0.5f / Resolution + 0.125f * sqrt(3) / Resolution));
 
-        public Bounds Bounds => new(Vector3.zero, new Vector3(1f + sqrt(3) / 2f / Resolution - HexDoubleRadius * sqrt(3) * 0.25f, 0f, 1f - HexDoubleRadius * 2f / 3f));
 
         public void Execute<Streams>(int zIndex, Streams streams) where Streams : struct, IMeshStreams
         {
@@ -55,8 +55,8 @@ namespace ProceduralMeshes.Generators
                 for (int i = 0; i < VertsPerHex; i++, vi++)
                 {
                     float3 gridOffset = float3(HexDoubleRadius * 2f / 3f, 0f, HexDoubleRadius * sqrt(3) * 0.5f);
-                    float evenXOffset = (xIndex & 1) == 1 ? -0.25f / Resolution : 0.25f / Resolution;
-                    float3 centerPosition = float3(xIndex * 2f / 3f / Resolution, 0f, zIndex * sqrt(3) * 0.5f / Resolution);
+                    float evenXOffset = (xIndex & 1) == 1 ? -0.125f * sqrt(3) / Resolution : 0.125f * sqrt(3) / Resolution;
+                    float3 centerPosition = float3(xIndex * 0.75f / Resolution, 0f, zIndex * sqrt(3) * 0.5f / Resolution);
                     float3 hexPointsOffset = float3(pointsX[i] / Resolution, 0f, pointsZ[i] / Resolution);
 
                     tempVertex.position = centerPosition;
