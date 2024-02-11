@@ -52,7 +52,11 @@ namespace ProceduralMeshes.Generators
                 streams.SetTriangle(ti + 4, vi + int3(0, 5, 6));
                 streams.SetTriangle(ti + 5, vi + int3(0, 6, 1));
 
-                float3 gridOffset = Resolution != 1 ? float3(0.5f - HexRadius * sqrt(3) * 0.25f, 0f, 1f - (Resolution + 0.5f) * HexRadius) : float3(0.225f, 0f, 0.0f);
+                float3 gridOffset = Resolution != 1 ? float3(0.5f - HexRadius * sqrt(3) * 0.25f, 
+                                                            0f, 
+                                                            2 * HexRadius * Mathf.Ceil(Resolution / 2f) + 0.5f * HexRadius * (Resolution / 2f))
+                                                            : float3(0.225f, 0f, 0.0f);
+
                 for (int i = 0; i < VertsPerHex; i++, vi++)
                 {
                     float evenZOffset = (zIndex & 1) == 1 ? HexRadius * 0.75f * sqrt(3) : HexRadius * 0.25f * sqrt(3);

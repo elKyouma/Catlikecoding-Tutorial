@@ -50,6 +50,7 @@ namespace ProceduralMeshes
             MeshJob<FlatHexagonGrid, Streams.SingleStream>.ScheduleParallel,
             MeshJob<FlatHexagonGrid, Streams.MultiStream>.ScheduleParallel
         };
+
         bool dirty;
         private void Awake()
         {
