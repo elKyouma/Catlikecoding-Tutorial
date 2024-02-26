@@ -130,7 +130,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _Time_Frequency: 3.7
+    - _Time_Frequency: 4.35
     - _Wave_Amplitude: 0
     - _WorkflowMode: 1
     - _ZWrite: 1

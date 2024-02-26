@@ -23,13 +23,17 @@ namespace ProceduralMeshes
         int resolution;
         [SerializeField]
         bool drawGizmos = true;
+        [SerializeField, Range(0.2f, 12f)]
+        private float gizmoSize = 1f;
         enum MeshJobType
         {
             SquareGrid,
             SharedSquareGrid,
             SharedTriangleGrid,
             PointyHexagonGrid,
-            FlatHexagonGrid
+            FlatHexagonGrid,
+            UVSphere,
+            Cylinder
         }
 
         Vector3[] vertices;
@@ -50,7 +54,11 @@ namespace ProceduralMeshes
             MeshJob<PointyHexagonGrid, Streams.SingleStream>.ScheduleParallel,
             MeshJob<PointyHexagonGrid, Streams.MultiStream>.ScheduleParallel,
             MeshJob<FlatHexagonGrid, Streams.SingleStream>.ScheduleParallel,
-            MeshJob<FlatHexagonGrid, Streams.MultiStream>.ScheduleParallel
+            MeshJob<FlatHexagonGrid, Streams.MultiStream>.ScheduleParallel,            
+            MeshJob<UVSphere, Streams.SingleStream>.ScheduleParallel,
+            MeshJob<UVSphere, Streams.MultiStream>.ScheduleParallel,
+            MeshJob<Cylinder, Streams.SingleStream>.ScheduleParallel,
+            MeshJob<Cylinder, Streams.MultiStream>.ScheduleParallel
         };
 
         bool dirty;
@@ -103,11 +111,11 @@ namespace ProceduralMeshes
                 Vector4 tan = t.TransformDirection(tangents[i]);
 
                 Gizmos.color = Color.cyan;
-                Gizmos.DrawSphere(v, 0.1f / resolution);
+                Gizmos.DrawSphere(v, gizmoSize * 0.1f / resolution);
                 Gizmos.color = Color.green;
-                Gizmos.DrawRay(v, 0.5f * n / resolution);
+                Gizmos.DrawRay(v, gizmoSize * 0.5f * n / resolution);
                 Gizmos.color = Color.red;
-                Gizmos.DrawRay(v, 0.5f * tan / resolution);
+                Gizmos.DrawRay(v, gizmoSize * 0.5f * tan / resolution);
             }
         }
     }
