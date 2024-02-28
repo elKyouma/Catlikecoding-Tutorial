@@ -16,6 +16,7 @@ namespace ProceduralMeshes.Generators
 
         public Bounds Bounds => new(new Vector3(0.0f, 0f, 0.0f), new Vector3(1f, 1f, 1f));
 
+        public float DebugParam { get; set; }
 
         public void Execute<Streams>(int index, Streams streams) where Streams : struct, IMeshStreams
         {

@@ -33,6 +33,7 @@ namespace ProceduralMeshes.Generators
         float HexDoubleRadius => (Resolution - 1f) / Resolution * 0.5f;
         public Bounds Bounds => new(Vector3.zero, new Vector3(0.65f, 0f, 0.5f / Resolution + 0.125f * sqrt(3) / Resolution));
 
+        public float DebugParam { get; set; }
 
         public void Execute<Streams>(int zIndex, Streams streams) where Streams : struct, IMeshStreams
         {

@@ -34,6 +34,8 @@ namespace ProceduralMeshes.Generators
 
         public Bounds Bounds => new(Vector3.zero, new Vector3(1f + sqrt(3) / 2f / Resolution - HexRadius * sqrt(3) * 0.25f, 0f, HexRadius * 2f / 3f));
 
+        public float DebugParam { get; set; }
+
         public void Execute<Streams>(int zIndex, Streams streams) where Streams : struct, IMeshStreams
         {
             Vertex tempVertex;

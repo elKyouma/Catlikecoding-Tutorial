@@ -40,6 +40,9 @@ namespace ProceduralMeshes
         Vector3[] normals;
         Vector4[] tangents;
 
+        [SerializeField, Range(-2f, 2f)]
+        private float debugParam;
+
         [SerializeField]
         MeshJobType meshJobType;
 
@@ -89,7 +92,7 @@ namespace ProceduralMeshes
             Mesh.MeshDataArray meshDataArray = Mesh.AllocateWritableMeshData(1);
             Mesh.MeshData meshData = meshDataArray[0];
 
-            meshJobs[(int)meshJobType*2 + (int)streamType](mesh, meshData, resolution, default).Complete();
+            meshJobs[(int)meshJobType*2 + (int)streamType](mesh, meshData, resolution, default, debugParam).Complete();
 
             Mesh.ApplyAndDisposeWritableMeshData(meshDataArray, mesh, MeshUpdateFlags.DontRecalculateBounds);
             GetComponent<MeshFilter>().mesh = mesh;
